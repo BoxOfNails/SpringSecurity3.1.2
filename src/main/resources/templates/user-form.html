@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add User</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container">
+    <h3>User Directory</h3>
+    <hr>
+    <p class="h4 mb-4">Add User</p>
+    <form action="#" th:action="@{/admin/save}" th:object="${user}" method="POST">
+        <!-- Hidden form field for updates -->
+        <input type="hidden" th:field="*{id}">
+        <input type="text" th:field="*{username}" placeholder="Username"
+               class="form-control mb-4 w-25">
+        <input type="text" th:field="*{formPassword}" placeholder="Password"
+               class="form-control mb-4 w-25">
+        <input type="text" th:field="*{firstName}" placeholder="First name"
+               class="form-control mb-4 w-25">
+        <input type="text" th:field="*{lastName}" placeholder="Last name"
+               class="form-control mb-4 w-25">
+        <input type="text" th:field="*{email}" placeholder="Email"
+               class="form-control mb-4 w-25">
+        <select th:field="*{formRole}" class="form-select form-select-sm mb-4" style="width:auto;">
+            <option th:each="tempRole : ${roles}" th:value="${tempRole}" th:text="${tempRole}"/>
+        </select>
+        <button type="submit" class="btn btn-success col-2">Save</button>
+    </form>
+    <hr>
+    <a th:href="@{/admin/list}">Back to User List</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+<h2> Home Page</h2>
+<hr>
+<p>
+    Welcome to the home page!
+</p>
+
+<hr>
+
+<!-- Display user information -->
+<p>
+    User: <span sec:authentication="principal.username"></span>
+    <br><br>
+    First Name: <span th:text="${#ctx.session.user.firstName}"></span>
+    <br><br>
+    Last Name: <span th:text="${#ctx.session.user.lastName}"></span>
+    <br><br>
+    Email: <span th:text="${#ctx.session.user.email}"></span>
+    <br><br>
+    Roles: <span sec:authentication="principal.authorities"></span>
+</p>
+<!-- Add a link to point to /admin ...
+ this is for admins only -->
+<div sec:authorize="hasRole('ADMIN')">
+    <p>
+        <!-- CHANGE LINK -->
+        <a th:href="@{/admin/list}">Admin DB control page </a>
+        (Only for Admins)
+    </p>
+</div>
+<hr>
+
+<!-- Add a logout button -->
+<form action="#" th:action="@{/logout}" method="POST">
+
+    <input type="submit" value="Logout"/>
+
+</form>
+
+</body>
+</html>

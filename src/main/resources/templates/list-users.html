@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Directory</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container">
+    <h3>User Directory</h3>
+    <hr>
+    <!-- Add a button -->
+    <a th:href="@{/admin/showForm}"
+       class="btn btn-primary btn-sm mb-3">
+        Add User
+    </a>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Username</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Update/Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tempUser : ${users}">
+            <td th:text="${tempUser.username}" />
+            <td th:text="${tempUser.firstName}" />
+            <td th:text="${tempUser.lastName}" />
+            <td th:text="${tempUser.email}" />
+            <td>
+                <a th:href="@{/admin/showFormForUpdate(userId=${tempUser.id})}"
+                   class="btn btn-info btn-sm">
+                    Update
+                </a>
+                <a th:href="@{/admin/delete(userId=${tempUser.id})}"
+                   class="btn btn-danger btn-sm"
+                   onclick="if (!(confirm('Are you sure you want to delete this user?'))) return false">
+                    Delete
+                </a>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+</div>
+<hr>
+<!-- Add a link to home page -->
+<a th:href="@{/user}">Back to Home Page</a>
+
+<hr>
+<!-- Add a logout button -->
+<form action="#" th:action="@{/logout}" method="POST">
+
+    <input type="submit" value="Logout"/>
+
+</form>
+
+</body>
+</html>
