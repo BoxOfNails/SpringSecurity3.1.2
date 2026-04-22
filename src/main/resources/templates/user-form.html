@@ -27,7 +27,7 @@
         <input type="text" th:field="*{email}" placeholder="Email"
                class="form-control mb-4 w-25">
         <select th:field="*{formRole}" class="form-select form-select-sm mb-4" style="width:auto;">
-            <option th:each="tempRole : ${roles}" th:value="${tempRole}" th:text="${tempRole}"/>
+            <option th:each="tempRole : ${#ctx.session.formRoles}" th:value="${tempRole}" th:text="${tempRole}"/>
         </select>
         <button type="submit" class="btn btn-success col-2">Save</button>
     </form>

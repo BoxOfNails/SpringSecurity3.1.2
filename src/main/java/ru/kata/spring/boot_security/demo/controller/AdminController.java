@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.controller;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +17,7 @@ import java.util.logging.Logger;
 @RequestMapping("/admin")
 public class AdminController {
 
-    @Value("${roles}")
-    private List<String> roles;
+
 
     private final UserService userService;
     private Logger logger = Logger.getLogger(getClass().getName());
@@ -40,7 +38,6 @@ public class AdminController {
     public String showForm(Model theModel) {
         User theUser = new User();
         theModel.addAttribute("user", theUser);
-        theModel.addAttribute("roles", roles);
         return "user-form";
     }
     @PostMapping("/save")
@@ -51,10 +48,8 @@ public class AdminController {
     @GetMapping("/showFormForUpdate")
     public String showFormForUpdate(@RequestParam("userId") int theId, Model theModel) {
         User theUser = userService.findById(theId);
-
         //set user as model attribute to pre-populate the form
         theModel.addAttribute("user", theUser);
-        theModel.addAttribute("roles", roles);
         //send over to the form
         return "user-form";
     }

@@ -5,24 +5,26 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.dto.WebUserDto;
 import ru.kata.spring.boot_security.demo.entity.User;
 
-import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class UserServiceImp implements UserService {
     private UserDao userDao;
-    private RoleDao roleDao;
+    private RoleService roleService;
+    private Logger logger = Logger.getLogger(getClass().getName());
 
     private BCryptPasswordEncoder passwordEncoder;
 
-    public UserServiceImp(UserDao userDao, RoleDao roleDao, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImp(UserDao userDao, RoleService roleService, BCryptPasswordEncoder passwordEncoder) {
         this.userDao = userDao;
-        this.roleDao = roleDao;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -54,15 +56,13 @@ public class UserServiceImp implements UserService {
     @Override
     public void save(User user) {
         user.setEnabled(true);
-        switch(user.getFormRole()) {
-            case "user":
-                user.setRoles(Arrays.asList(roleDao.findRoleByName("ROLE_USER")));
-                break;
-            case "admin":
-                user.setRoles(Arrays.asList(roleDao.findRoleByName("ROLE_USER"), roleDao.findRoleByName("ROLE_ADMIN")));
-                break;
+        if (user.getFormRole().equals("admin")) {
+            user.setRoles(Stream.of(roleService.findRoleByName("ROLE_USER"), roleService.findRoleByName("ROLE_ADMIN")).collect(Collectors.toSet()));
+        } else {
+            user.setRoles(Stream.of(roleService.findRoleByName("ROLE_USER")).collect(Collectors.toSet()));
         }
         user.setPassword(passwordEncoder.encode(user.getFormPassword()));
+
         userDao.save(user);
     }
 
@@ -72,21 +72,20 @@ public class UserServiceImp implements UserService {
         User user = new User();
 
         user.setUsername(webUserDto.getUsername());
-        user.setPassword(passwordEncoder.encode(webUserDto.getPassword()));
+        user.setFormPassword(webUserDto.getPassword());
         user.setFirstName(webUserDto.getFirstName());
         user.setLastName(webUserDto.getLastName());
         user.setEmail(webUserDto.getEmail());
-        user.setEnabled(true);
 
-        user.setRoles(Arrays.asList(roleDao.findRoleByName("ROLE_USER")));
+        user.setRoles(Stream.of(roleService.findRoleByName("ROLE_USER")).collect(Collectors.toSet()));
 
-        userDao.save(user);
+        save(user);
     }
 
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.findByUsername(username);
+        User user = findByUserName(username);
         if(user == null) {
             throw new UsernameNotFoundException("Invalid username or password");
         }

@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name="user")
@@ -46,10 +47,10 @@ public class User implements UserDetails {
     private String email;
 
     @Transient
-    private String formRole;
+    private String formRole = "";
 
     @Transient
-    private String formPassword;
+    private String formPassword = "password";
 
     @ManyToMany(fetch = FetchType.LAZY, cascade =
             {
@@ -61,7 +62,7 @@ public class User implements UserDetails {
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles;
+    private Set<Role> roles;
 
     public User() {
 
@@ -73,7 +74,7 @@ public class User implements UserDetails {
         this.enabled = enabled;
     }
 
-    public User(String username, String password, boolean enabled, Collection<Role> roles) {
+    public User(String username, String password, boolean enabled, Set<Role> roles) {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
@@ -138,7 +139,7 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

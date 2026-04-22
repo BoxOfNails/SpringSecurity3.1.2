@@ -9,8 +9,7 @@ import java.util.List;
 
 @Repository
 public class UserDaoImp implements UserDao {
-    EntityManager entityManager;
-
+    private EntityManager entityManager;
     public UserDaoImp(EntityManager entityManager) {
         this.entityManager = entityManager;
     }
@@ -18,7 +17,9 @@ public class UserDaoImp implements UserDao {
     @Override
     public List<User> findAllUsers() {
         //create a query
-        TypedQuery<User> theQuery = entityManager.createQuery("from User", User.class);
+        TypedQuery<User> theQuery = entityManager.createQuery(
+                "select user from User user " +
+                        "join fetch user.roles", User.class);
 
         // execute query and get result list
         List<User> users = theQuery.getResultList();
@@ -47,7 +48,10 @@ public class UserDaoImp implements UserDao {
 
     @Override
     public User findByUsername(String username) {
-        TypedQuery<User> query = entityManager.createQuery("from User where username=:uName and enabled=true", User.class);
+        TypedQuery<User> query = entityManager.createQuery(
+                "select user from User user " +
+                        "join fetch user.roles " +
+                        "where user.username=:uName and user.enabled=true", User.class);
         query.setParameter("uName", username);
         User user = null;
         try {
