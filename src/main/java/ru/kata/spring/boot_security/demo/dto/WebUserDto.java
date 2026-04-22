@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.Objects;
 
-public class WebUser {
+public class WebUserDto {
 
     @NotNull(message = "is required")
     @Size(min = 1, message = "is required")
@@ -29,7 +29,7 @@ public class WebUser {
     @Pattern(regexp="^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
     private String email;
 
-    public WebUser() {
+    public WebUserDto() {
 
     }
 
@@ -76,8 +76,8 @@ public class WebUser {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        WebUser webUser = (WebUser) o;
-        return Objects.equals(username, webUser.username) && Objects.equals(password, webUser.password) && Objects.equals(firstName, webUser.firstName) && Objects.equals(lastName, webUser.lastName) && Objects.equals(email, webUser.email);
+        WebUserDto webUserDto = (WebUserDto) o;
+        return Objects.equals(username, webUserDto.username) && Objects.equals(password, webUserDto.password) && Objects.equals(firstName, webUserDto.firstName) && Objects.equals(lastName, webUserDto.lastName) && Objects.equals(email, webUserDto.email);
     }
 
     @Override

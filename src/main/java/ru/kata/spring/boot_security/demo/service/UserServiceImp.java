@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
-import ru.kata.spring.boot_security.demo.dto.WebUser;
+import ru.kata.spring.boot_security.demo.dto.WebUserDto;
 import ru.kata.spring.boot_security.demo.entity.User;
 
 import java.util.Arrays;
@@ -68,14 +68,14 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     @Override
-    public void register(WebUser webUser) {
+    public void register(WebUserDto webUserDto) {
         User user = new User();
 
-        user.setUsername(webUser.getUsername());
-        user.setPassword(passwordEncoder.encode(webUser.getPassword()));
-        user.setFirstName(webUser.getFirstName());
-        user.setLastName(webUser.getLastName());
-        user.setEmail(webUser.getEmail());
+        user.setUsername(webUserDto.getUsername());
+        user.setPassword(passwordEncoder.encode(webUserDto.getPassword()));
+        user.setFirstName(webUserDto.getFirstName());
+        user.setLastName(webUserDto.getLastName());
+        user.setEmail(webUserDto.getEmail());
         user.setEnabled(true);
 
         user.setRoles(Arrays.asList(roleDao.findRoleByName("ROLE_USER")));
